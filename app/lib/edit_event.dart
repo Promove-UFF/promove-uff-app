@@ -2,12 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'event.dart';
 import 'location_picker.dart';
+import 'usuario.dart';
 
 class EditEventPage extends StatefulWidget {
   final Event event;
-  EditEventPage(this.event);
+  final Usuario user;
+  EditEventPage(this.event, this.user);
 
   @override
   _EditEventPageState createState() => _EditEventPageState();
@@ -94,7 +97,7 @@ class _EditEventPageState extends State<EditEventPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LocationPickerScreen(updatedEvent),
+          builder: (context) => LocationPickerScreen(updatedEvent, widget.user),
         ),
       );
     }

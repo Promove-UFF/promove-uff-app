@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'event.dart';
 import 'edit_event.dart';
+import 'usuario.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final Event event;
+  final Usuario user;
 
-  const EventDetailsPage({Key? key, required this.event}) : super(key: key);
+  const EventDetailsPage({Key? key, required this.event, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +121,7 @@ class EventDetailsPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => EditEventPage(event),
+                              builder: (context) => EditEventPage(event, user),
                             ),
                           );
                         },

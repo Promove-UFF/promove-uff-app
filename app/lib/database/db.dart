@@ -1,103 +1,41 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../event.dart';
 
 class DB {
   DB._();
 
   static final DB instance = DB._();
-  static Database? _database;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
+  CollectionReference get _eventsCollection => _firestore.collection('events');
 
-    return await _initDatabase();
+  Future<void> insertEvent(Event event) async {
+    await _eventsCollection.add(event.toMap());
   }
 
-
-  Future<Database> _initDatabase() async {
-    return await openDatabase(
-      join(await getDatabasesPath(), 'infos.db'),
-      onCreate: _onCreate,
-      version: 1,
-    );
-  }
-
-  _onCreate(db, version) async {
-    await db.execute('''
-    CREATE TABLE usuarios (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT,
-      email TEXT,
-      senha TEXT,
-      curso TEXT,
-      tipo INTEGER
-    )
-    ''');
-    await db.execute(
-        'CREATE TABLE events_table(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date TEXT, time TEXT, location TEXT, course TEXT, description TEXT, latitude REAL, longitude REAL, professor TEXT, professorEmail TEXT, monitor TEXT, monitorEmail TEXT)');
-  }
-
-  Future<List<Map<String, Object?>>> getUsuarios() async {
-    final db = await database;
-    final data = await db.query('usuarios');
-    return data;
-  }
-
-  void setUsuarios(
-      String nome, String email, String senha, String curso, int tipo) async {
-    final db = await database;
-    await db.insert('usuarios', {
-      'nome': nome,
-      'email': email,
-      'senha': senha,
-      'curso': curso,
-      'tipo': tipo
-    });
-  }
-
-  Future<List<Map<String, dynamic>>> getEventMapList() async {
-    final db = await database;
-    final result = await db.query('events_table');
-    return result;
-  }
-
+  // Future<List<Event>> getEventList() async {
+  //   QuerySnapshot snapshot = await _eventsCollection.get();
+  //   return snapshot.docs
+  //       .map((doc) => Event.fromMap(doc.data() as Map<String, dynamic>))
+  //       .toList();
+  // }
+  // gambiarra para o id
   Future<List<Event>> getEventList() async {
-    final List<Map<String, dynamic>> eventMapList = await getEventMapList();
-    final List<Event> eventList = [];
-    eventMapList.forEach((eventMap) {
-      eventList.add(Event.fromMap(eventMap));
-    });
-    return eventList;
+    QuerySnapshot snapshot = await _eventsCollection.get();
+    return snapshot.docs.map((doc) {
+      // Adicionando o ID do documento ao mapa antes de criar o objeto Event
+      final data = doc.data() as Map<String, dynamic>;
+      data['id'] = doc.id;
+      return Event.fromMap(data);
+    }).toList();
   }
 
-  Future<int> insertEvent(Event event) async {
-    Database db = await database;
-    print(event.toMap());
-    final int result = await db.insert('events_table', event.toMap());
-    return result;
-  }
 
-  Future<int> updateEvent(Event event) async {
-    Database db = await database;
-    final int result = await db.update(
-      'events_table',
-      event.toMap(),
-      where: 'id = ?',
-      whereArgs: [event.id],
-    );
-    return result;
-  }
 
-  Future<int> deleteEvent(int id) async {
-    Database db = await database;
-    final int result = await db.delete(
-      'events_table',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-    return result;
+  Future<void> updateEvent(Event event) async {
+    await _eventsCollection.doc(event.id).update(event.toMap());
+  }
+  Future<void> deleteEvent(String id) async {
+    await _eventsCollection.doc(id).delete();
   }
 }

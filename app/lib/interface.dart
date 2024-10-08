@@ -3,13 +3,15 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:project_uff/details.dart';
 import 'event.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'database/db.dart';
 import 'edit_event.dart';
+import 'usuario.dart';
 
 class InterfacePage extends StatefulWidget {
-  final int? tipo; // Declare tipo como final
+  final Usuario user;
 
-  InterfacePage(this.tipo);
+  InterfacePage(this.user);
 
   @override
   _InterfacePageState createState() => _InterfacePageState();
@@ -39,6 +41,7 @@ class _InterfacePageState extends State<InterfacePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 225, 230, 232),
         centerTitle: true,
         actions: [
@@ -47,7 +50,7 @@ class _InterfacePageState extends State<InterfacePage> {
             icon: Icon(Icons.account_circle),
             onPressed: () {},
           ),
-          if (widget.tipo == 0) // Verifique o valor de tipo aqui
+          if (widget.user.isProfessor) // É professor?
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
@@ -69,7 +72,7 @@ class _InterfacePageState extends State<InterfacePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditEventPage(novoEvento),
+                    builder: (context) => EditEventPage(novoEvento, widget.user),
                   ),
                 );
               },
@@ -223,7 +226,7 @@ class _InterfacePageState extends State<InterfacePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EventDetailsPage(event: _selectedEvent!),
+                                  builder: (context) => EventDetailsPage(event: _selectedEvent!, user: widget.user),
                                 ),
                               );
                             }
