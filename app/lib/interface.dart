@@ -66,6 +66,7 @@ class _InterfacePageState extends State<InterfacePage> {
                   longitude: 0.0,
                   professor: '',
                   professorEmail: '',
+                  professorId: '',
                   monitor: '',
                   monitorEmail: '',
                 );

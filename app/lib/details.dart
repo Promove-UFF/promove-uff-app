@@ -42,14 +42,11 @@ class EventDetailsPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('📍 Localização',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Text('🕒 Turno',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Text('📑 Modalidade',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
@@ -117,19 +114,20 @@ class EventDetailsPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditEventPage(event, user),
-                            ),
-                          );
-                        },
+                        onPressed: (event.professorId == user.id || event.monitorEmail == user.email)
+                            ? () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditEventPage(event, user),
+                                  ),
+                                );
+                              }
+                            : null, // Botão desativado se não for professor ou monitor
                         child: Text('Editar'),
                         style: ElevatedButton.styleFrom(
                           iconColor: Colors.green,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 24.0, vertical: 12.0),
+                          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                         ),
                       ),
                       ElevatedButton(
@@ -139,8 +137,7 @@ class EventDetailsPage extends StatelessWidget {
                         child: Text('Retornar'),
                         style: ElevatedButton.styleFrom(
                           iconColor: Colors.red,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 24.0, vertical: 12.0),
+                          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
                         ),
                       ),
                     ],

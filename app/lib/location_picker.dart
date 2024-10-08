@@ -51,6 +51,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                   professorEmail: widget.event.professorEmail,
                   monitor: widget.event.monitor,
                   monitorEmail: widget.event.monitorEmail,
+                  professorId: widget.event.professorId
                 );
                 if(widget.event.id == null){
                 await DB.instance.insertEvent(updatedEvent);

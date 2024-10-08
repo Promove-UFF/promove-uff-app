@@ -37,10 +37,16 @@ class _EditEventPageState extends State<EditEventPage> {
     _timeController.text = widget.event.time;
     _courseController.text = widget.event.course;
     _summaryController.text = widget.event.description;
-    _professorController.text = widget.event.professor;
-    _professorEmailController.text = widget.event.professorEmail;
     _monitorController.text = widget.event.monitor;
     _monitorEmailController.text = widget.event.monitorEmail;
+    // Preenche automaticamente se o usuário for professor
+    if (widget.user.isProfessor) {
+      _professorController.text = widget.user.nome;
+      _professorEmailController.text = widget.user.email;
+    } else {
+      _professorController.text = widget.event.professor;
+      _professorEmailController.text = widget.event.professorEmail;
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -92,6 +98,7 @@ class _EditEventPageState extends State<EditEventPage> {
         professorEmail: _professorEmailController.text,
         monitor: _monitorController.text,
         monitorEmail: _monitorEmailController.text,
+        professorId: widget.event.professorId.isNotEmpty ? widget.event.professorId : widget.user.id, // Usa o ID do professor logado se professorId estiver vazio
       );
 
       Navigator.push(
@@ -340,6 +347,7 @@ class _EditEventPageState extends State<EditEventPage> {
                         ),
                         Expanded(
                           child: TextFormField(
+                            enabled: widget.user.isProfessor,
                             keyboardType: TextInputType.text,
                             controller: _professorController,
                             decoration: InputDecoration(
@@ -380,6 +388,7 @@ class _EditEventPageState extends State<EditEventPage> {
                         ),
                         Expanded(
                           child: TextFormField(
+                            enabled: widget.user.isProfessor,
                             keyboardType: TextInputType.emailAddress,
                             controller: _professorEmailController,
                             decoration: InputDecoration(
@@ -467,7 +476,8 @@ class _EditEventPageState extends State<EditEventPage> {
                                 borderSide:
                                     BorderSide(color: Colors.black, width: 0.5),
                               ),
-                            ),
+                            ), 
+                            enabled: widget.user.isProfessor,
                           ),
                         ),
                       ],
