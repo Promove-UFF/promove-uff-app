@@ -19,7 +19,7 @@ class Usuario {
       nome: data['name'] ?? '',
       email: data['email'] ?? '',
       fotoUrl: data['photoUrl'],
-      isProfessor: data['isProfessor'] ?? false,
+      isProfessor: data['prof'],
     );
   }
 
