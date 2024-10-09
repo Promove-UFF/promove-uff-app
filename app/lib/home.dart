@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_uff/google_sign_in_handler.dart';
 import 'package:project_uff/interface.dart';
 import 'package:provider/provider.dart';
+import 'package:project_uff/usuario.dart';
 
 class MyScreen extends StatelessWidget {
   const MyScreen({super.key});
@@ -75,7 +76,7 @@ class _AccountOptionsState extends State<AccountOptions> {
               ),
               onPressed: () => googleSignInHandler?.signInWithGoogle(context),
               child: Text(
-                'Já tenho uma conta',
+                'Entrar com Conta Google',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 25,
@@ -84,29 +85,34 @@ class _AccountOptionsState extends State<AccountOptions> {
               ),
             ),
           ),
-          // SizedBox(
-          //   width: 300,
-          //   height: 52,
-          //   child: ElevatedButton(
-          //     style: ElevatedButton.styleFrom(
-          //       backgroundColor: Color.fromARGB(255, 0, 130, 35),
-          //     ),
-          //     onPressed: () => Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => InterfacePage(0),
-          //       ),
-          //     ),
-          //     child: Text(
-          //       'Não tenho uma conta',
-          //       style: TextStyle(
-          //         color: Colors.white,
-          //         fontSize: 25,
-          //         fontFamily: 'Montserrat',
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          SizedBox(
+            width: 300,
+            height: 52,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromARGB(255, 0, 130, 35),
+              ),
+              onPressed: () {
+                // Cria um usuário visitante e passa como parâmetro
+                Usuario visitante = Usuario.visitante();
+                
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => InterfacePage(visitante),
+                  ),
+                );
+              },
+              child: Text(
+                'Entrar como visitante',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

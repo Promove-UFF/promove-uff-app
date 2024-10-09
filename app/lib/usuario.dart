@@ -22,6 +22,14 @@ class Usuario {
       isProfessor: data['isProfessor'],
     );
   }
+  factory Usuario.visitante() {
+    return Usuario(
+      id: 'visitante_id', 
+      email: 'visitante@exemplo.com', 
+      nome: 'Visitante',
+      isProfessor: false,
+    );
+  }
 
   Map<String, dynamic> toFirestore() {
     return {
