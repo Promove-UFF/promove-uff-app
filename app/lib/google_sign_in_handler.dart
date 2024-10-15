@@ -66,7 +66,7 @@ class GoogleSignInHandler {
         nome: googleUser.displayName ?? '',
         email: googleUser.email,
         fotoUrl: googleUser.photoUrl,
-        isProfessor: false, // Defina com base na lógica de professor
+        isProfessor: false, 
       );
       await userDoc.set(newUser.toFirestore());
       debugPrint('Usuário salvo no Firestore');

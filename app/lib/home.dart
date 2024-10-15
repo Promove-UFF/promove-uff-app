@@ -76,7 +76,7 @@ class _AccountOptionsState extends State<AccountOptions> {
               ),
               onPressed: () => googleSignInHandler?.signInWithGoogle(context),
               child: Text(
-                'Entrar com Conta Google',
+                'Entrar com Google',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 25,

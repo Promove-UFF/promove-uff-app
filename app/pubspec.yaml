@@ -35,6 +35,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  geolocator: ^9.0.2
   cupertino_icons: ^1.0.6
   path: ^1.9.0
   geocoding: ^2.0.0
