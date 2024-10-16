@@ -76,6 +76,16 @@ class _InterfacePageState extends State<InterfacePage> {
     });
   }
 
+  // Exibir o aviso "Não implementado ainda"
+  void _showNotImplemented(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Não implementado ainda'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,10 +135,43 @@ class _InterfacePageState extends State<InterfacePage> {
       ),
       body: Column(
         children: [
+          Container(
+            color: Color.fromARGB(255, 225, 230, 232),
+            child: Container(
+              margin: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 217, 217, 217),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    onTap: () => _showNotImplemented(context),
+                    child: Text('📍 Localização',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                  GestureDetector(
+                    onTap: () => _showNotImplemented(context),
+                    child: Text('🕒 Turno',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                  GestureDetector(
+                    onTap: () => _showNotImplemented(context),
+                    child: Text('📑 Modalidade',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ),
+          ),
           Expanded(
             child: FlutterMap(
               options: MapOptions(
-                // Ajusta o centro para a localização atual se disponível, caso contrário, usa um valor padrão, no nosso caso, a UFF Praia vermelha, podendo ser alterado.
                 initialCenter: _currentLocation ?? LatLng(-22.9056, -43.1344), 
                 initialZoom: 15.0,
               ),

@@ -24,6 +24,7 @@ class _EditEventPageState extends State<EditEventPage> {
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _courseController = TextEditingController();
   final TextEditingController _summaryController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _professorController = TextEditingController();
   final TextEditingController _professorEmailController = TextEditingController();
   final TextEditingController _monitorController = TextEditingController();
@@ -37,6 +38,7 @@ class _EditEventPageState extends State<EditEventPage> {
     _timeController.text = widget.event.time;
     _courseController.text = widget.event.course;
     _summaryController.text = widget.event.description;
+    _locationController.text = widget.event.location;
     _monitorController.text = widget.event.monitor;
     _monitorEmailController.text = widget.event.monitorEmail;
     // Preenche automaticamente se o usuário for professor
@@ -86,7 +88,7 @@ class _EditEventPageState extends State<EditEventPage> {
     if (_formKey.currentState!.validate()) {
       Event updatedEvent = Event(
         id: widget.event.id, 
-        location: widget.event.location,
+        location: _locationController.text,
         latitude: widget.event.latitude,
         longitude: widget.event.longitude,
         title: _eventNameController.text,
@@ -328,6 +330,46 @@ class _EditEventPageState extends State<EditEventPage> {
                                     BorderSide(color: Colors.black, width: 0.5),
                               ),
                             ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0),                    
+                    Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          child: Text(
+                            'Localização: ',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: _locationController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.black, width: 0.5),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.black, width: 0.5),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Este campo é obrigatório';
+                              }
+                              return null;
+                            },
                           ),
                         ),
                       ],
