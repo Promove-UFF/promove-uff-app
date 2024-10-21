@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:project_uff/usuario.dart';
 import 'event.dart';
 import 'database/db.dart';
 import 'interface.dart';
 
 class LocationPickerScreen extends StatefulWidget {
   final Event event;
+  final Usuario user;
 
-  LocationPickerScreen(this.event);
+  LocationPickerScreen(this.event, this.user);
 
   @override
   _LocationPickerScreenState createState() => _LocationPickerScreenState();
@@ -49,6 +51,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                   professorEmail: widget.event.professorEmail,
                   monitor: widget.event.monitor,
                   monitorEmail: widget.event.monitorEmail,
+                  professorId: widget.event.professorId
                 );
                 if(widget.event.id == null){
                 await DB.instance.insertEvent(updatedEvent);
@@ -59,7 +62,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InterfacePage(1),
+                    builder: (context) => InterfacePage(widget.user),
                   ),
                 );
               } else {

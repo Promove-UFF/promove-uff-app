@@ -1,5 +1,5 @@
 class Event {
-  final int? id;
+  final String? id;
   final String title;
   final String date;
   final String time;
@@ -12,6 +12,7 @@ class Event {
   final String professorEmail;
   final String monitor;
   final String monitorEmail;
+  final String professorId;
 
   Event({
     this.id,
@@ -25,10 +26,12 @@ class Event {
     required this.longitude,
     required this.professor,
     required this.professorEmail,
+    required this.professorId,
     required this.monitor,
     required this.monitorEmail,
   });
 
+  // Converte o objeto para um mapa (para salvar no Firestore)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -43,10 +46,12 @@ class Event {
       'professor': professor,
       'professorEmail': professorEmail,
       'monitor': monitor,
-      'monitorEmail':monitorEmail,
+      'monitorEmail': monitorEmail,
+      'professorId': professorId,
     };
   }
 
+  // Cria um objeto Event a partir de um mapa (para recuperar do Firestore)
   factory Event.fromMap(Map<String, dynamic> map) {
     return Event(
       id: map['id'],
@@ -62,6 +67,7 @@ class Event {
       professorEmail: map['professorEmail'],
       monitor: map['monitor'],
       monitorEmail: map['monitorEmail'],
+      professorId: map['professorId'],
     );
   }
 }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:geolocator/geolocator.dart'; // Adicione essa linha
 import 'package:project_uff/details.dart';
 import 'event.dart';
+
 import 'database/db.dart';
 import 'edit_event.dart';
+import 'usuario.dart';
 
 class InterfacePage extends StatefulWidget {
-  final int? tipo; // Declare tipo como final
+  final Usuario user;
 
-  InterfacePage(this.tipo);
+  InterfacePage(this.user);
 
   @override
   _InterfacePageState createState() => _InterfacePageState();
@@ -19,6 +22,7 @@ class _InterfacePageState extends State<InterfacePage> {
   late DB _databaseHelper;
   late List<Event> events;
   Event? _selectedEvent;
+  LatLng? _currentLocation; // Variável para armazenar a localização atual
 
   @override
   void initState() {
@@ -26,8 +30,10 @@ class _InterfacePageState extends State<InterfacePage> {
     _databaseHelper = DB.instance;
     events = [];
     _loadEvents();
+    _requestLocation(); // Solicitar localização ao iniciar
   }
 
+  // Método para carregar eventos do banco de dados
   Future<void> _loadEvents() async {
     final _events = await _databaseHelper.getEventList();
     setState(() {
@@ -35,10 +41,56 @@ class _InterfacePageState extends State<InterfacePage> {
     });
   }
 
+  // Método para solicitar permissão e pegar a localização do usuário
+  Future<void> _requestLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Verifica se o serviço de localização está habilitado
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Caso o serviço esteja desativado
+      return;
+    }
+
+    // Verifica a permissão de localização
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissão negada, não faz nada
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissão permanentemente negada, não pode pedir novamente
+      return;
+    }
+
+    // Se a permissão foi concedida, pega a localização atual
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+    });
+  }
+
+  // Exibir o aviso "Não implementado ainda"
+  void _showNotImplemented(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Não implementado ainda'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color.fromARGB(255, 225, 230, 232),
         centerTitle: true,
         actions: [
@@ -47,7 +99,7 @@ class _InterfacePageState extends State<InterfacePage> {
             icon: Icon(Icons.account_circle),
             onPressed: () {},
           ),
-          if (widget.tipo == 0) // Verifique o valor de tipo aqui
+          if (widget.user.isProfessor) // É professor?
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
@@ -63,13 +115,14 @@ class _InterfacePageState extends State<InterfacePage> {
                   longitude: 0.0,
                   professor: '',
                   professorEmail: '',
+                  professorId: '',
                   monitor: '',
                   monitorEmail: '',
                 );
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditEventPage(novoEvento),
+                    builder: (context) => EditEventPage(novoEvento, widget.user),
                   ),
                 );
               },
@@ -82,62 +135,72 @@ class _InterfacePageState extends State<InterfacePage> {
       ),
       body: Column(
         children: [
-          Container(
-            color: Color.fromARGB(255, 225, 230, 232),
-            child: Container(
-              margin: EdgeInsets.all(16.0),
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 217, 217, 217),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text('📍 Localização',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  Text('🕒 Turno',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  Text('📑 Modalidade',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            ),
-          ),
+          // Container(
+          //   color: Color.fromARGB(255, 225, 230, 232),
+          //   child: Container(
+          //     margin: EdgeInsets.all(16.0),
+          //     padding: EdgeInsets.all(8.0),
+          //     decoration: BoxDecoration(
+          //       color: Color.fromARGB(255, 217, 217, 217),
+          //       borderRadius: BorderRadius.circular(25),
+          //     ),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //       children: [
+          //         GestureDetector(
+          //           onTap: () => _showNotImplemented(context),
+          //           child: Text('📍 Localização',
+          //               style: TextStyle(
+          //                   fontSize: 16, fontWeight: FontWeight.bold)),
+          //         ),
+          //         GestureDetector(
+          //           onTap: () => _showNotImplemented(context),
+          //           child: Text('🕒 Turno',
+          //               style: TextStyle(
+          //                   fontSize: 16, fontWeight: FontWeight.bold)),
+          //         ),
+          //         GestureDetector(
+          //           onTap: () => _showNotImplemented(context),
+          //           child: Text('📑 Modalidade',
+          //               style: TextStyle(
+          //                   fontSize: 16, fontWeight: FontWeight.bold)),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           Expanded(
             child: FlutterMap(
-                options: MapOptions(
-                  initialCenter: LatLng(-22.9056, -43.1344), // Centro do mapa (Exemplo: UFF, Niterói)
-                  initialZoom: 15.0,
+              options: MapOptions(
+                initialCenter: _currentLocation ?? LatLng(-22.9056, -43.1344), 
+                initialZoom: 15.0,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  subdomains: ['a', 'b', 'c'],
                 ),
-                children: [
-                  TileLayer(
-                    urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    subdomains: ['a', 'b', 'c'],
-                  ),
-                  MarkerLayer(
-                    markers: events.map((event) {
-                      return Marker(
-                        width: 80.0,
-                        height: 80.0,
-                        point: LatLng(event.latitude, event.longitude),
-                        child: GestureDetector(
-                          onTap: () {
-                            _showMarkerInfo(context, event);
-                          },
-                          child: Icon(
-                            Icons.location_on,
-                            color: Colors.red,
-                            size: 40.0,
-                          ),
+                MarkerLayer(
+                  markers: events.map((event) {
+                    return Marker(
+                      width: 80.0,
+                      height: 80.0,
+                      point: LatLng(event.latitude, event.longitude),
+                      child: GestureDetector(
+                        onTap: () {
+                          _showMarkerInfo(context, event);
+                        },
+                        child: Icon(
+                          Icons.location_on,
+                          color: Colors.red,
+                          size: 40.0,
                         ),
-                      );
-                    }).toList(),
-                  ),
-                ]),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
           ),
           Container(
             color: Colors.grey[200],
@@ -223,7 +286,7 @@ class _InterfacePageState extends State<InterfacePage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => EventDetailsPage(event: _selectedEvent!),
+                                  builder: (context) => EventDetailsPage(event: _selectedEvent!, user: widget.user),
                                 ),
                               );
                             }

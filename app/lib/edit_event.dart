@@ -2,12 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'event.dart';
 import 'location_picker.dart';
+import 'usuario.dart';
 
 class EditEventPage extends StatefulWidget {
   final Event event;
-  EditEventPage(this.event);
+  final Usuario user;
+  EditEventPage(this.event, this.user);
 
   @override
   _EditEventPageState createState() => _EditEventPageState();
@@ -21,6 +24,7 @@ class _EditEventPageState extends State<EditEventPage> {
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _courseController = TextEditingController();
   final TextEditingController _summaryController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _professorController = TextEditingController();
   final TextEditingController _professorEmailController = TextEditingController();
   final TextEditingController _monitorController = TextEditingController();
@@ -34,10 +38,17 @@ class _EditEventPageState extends State<EditEventPage> {
     _timeController.text = widget.event.time;
     _courseController.text = widget.event.course;
     _summaryController.text = widget.event.description;
-    _professorController.text = widget.event.professor;
-    _professorEmailController.text = widget.event.professorEmail;
+    _locationController.text = widget.event.location;
     _monitorController.text = widget.event.monitor;
     _monitorEmailController.text = widget.event.monitorEmail;
+    // Preenche automaticamente se o usuário for professor
+    if (widget.user.isProfessor) {
+      _professorController.text = widget.user.nome;
+      _professorEmailController.text = widget.user.email;
+    } else {
+      _professorController.text = widget.event.professor;
+      _professorEmailController.text = widget.event.professorEmail;
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -77,7 +88,7 @@ class _EditEventPageState extends State<EditEventPage> {
     if (_formKey.currentState!.validate()) {
       Event updatedEvent = Event(
         id: widget.event.id, 
-        location: widget.event.location,
+        location: _locationController.text,
         latitude: widget.event.latitude,
         longitude: widget.event.longitude,
         title: _eventNameController.text,
@@ -89,12 +100,13 @@ class _EditEventPageState extends State<EditEventPage> {
         professorEmail: _professorEmailController.text,
         monitor: _monitorController.text,
         monitorEmail: _monitorEmailController.text,
+        professorId: widget.event.professorId.isNotEmpty ? widget.event.professorId : widget.user.id, // Usa o ID do professor logado se professorId estiver vazio
       );
 
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LocationPickerScreen(updatedEvent),
+          builder: (context) => LocationPickerScreen(updatedEvent, widget.user),
         ),
       );
     }
@@ -118,37 +130,37 @@ class _EditEventPageState extends State<EditEventPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              color: Color.fromARGB(255, 225, 230, 232),
-              child: Container(
-                margin: EdgeInsets.all(16.0),
-                padding: EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 217, 217, 217),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 217, 217, 217),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text('📍 Localização',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
-                      Text('🕒 Turno',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
-                      Text('📑 Modalidade',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   color: Color.fromARGB(255, 225, 230, 232),
+            //   child: Container(
+            //     margin: EdgeInsets.all(16.0),
+            //     padding: EdgeInsets.all(8.0),
+            //     decoration: BoxDecoration(
+            //       color: Color.fromARGB(255, 217, 217, 217),
+            //       borderRadius: BorderRadius.circular(25),
+            //     ),
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         color: Color.fromARGB(255, 217, 217, 217),
+            //         borderRadius: BorderRadius.circular(25),
+            //       ),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //         children: [
+            //           Text('📍 Localização',
+            //               style: TextStyle(
+            //                   fontSize: 14, fontWeight: FontWeight.bold)),
+            //           Text('🕒 Turno',
+            //               style: TextStyle(
+            //                   fontSize: 14, fontWeight: FontWeight.bold)),
+            //           Text('📑 Modalidade',
+            //               style: TextStyle(
+            //                   fontSize: 14, fontWeight: FontWeight.bold)),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Form(
@@ -322,6 +334,46 @@ class _EditEventPageState extends State<EditEventPage> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 16.0),                    
+                    Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          child: Text(
+                            'Localização: ',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: _locationController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.black, width: 0.5),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.black, width: 0.5),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Este campo é obrigatório';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 16.0),
                     Row(
                       children: [
@@ -337,6 +389,7 @@ class _EditEventPageState extends State<EditEventPage> {
                         ),
                         Expanded(
                           child: TextFormField(
+                            enabled: widget.user.isProfessor,
                             keyboardType: TextInputType.text,
                             controller: _professorController,
                             decoration: InputDecoration(
@@ -377,6 +430,7 @@ class _EditEventPageState extends State<EditEventPage> {
                         ),
                         Expanded(
                           child: TextFormField(
+                            enabled: widget.user.isProfessor,
                             keyboardType: TextInputType.emailAddress,
                             controller: _professorEmailController,
                             decoration: InputDecoration(
@@ -464,7 +518,8 @@ class _EditEventPageState extends State<EditEventPage> {
                                 borderSide:
                                     BorderSide(color: Colors.black, width: 0.5),
                               ),
-                            ),
+                            ), 
+                            enabled: widget.user.isProfessor,
                           ),
                         ),
                       ],
