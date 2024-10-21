@@ -130,37 +130,37 @@ class _EditEventPageState extends State<EditEventPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              color: Color.fromARGB(255, 225, 230, 232),
-              child: Container(
-                margin: EdgeInsets.all(16.0),
-                padding: EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 217, 217, 217),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 217, 217, 217),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text('📍 Localização',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
-                      Text('🕒 Turno',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
-                      Text('📑 Modalidade',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   color: Color.fromARGB(255, 225, 230, 232),
+            //   child: Container(
+            //     margin: EdgeInsets.all(16.0),
+            //     padding: EdgeInsets.all(8.0),
+            //     decoration: BoxDecoration(
+            //       color: Color.fromARGB(255, 217, 217, 217),
+            //       borderRadius: BorderRadius.circular(25),
+            //     ),
+            //     child: Container(
+            //       decoration: BoxDecoration(
+            //         color: Color.fromARGB(255, 217, 217, 217),
+            //         borderRadius: BorderRadius.circular(25),
+            //       ),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //         children: [
+            //           Text('📍 Localização',
+            //               style: TextStyle(
+            //                   fontSize: 14, fontWeight: FontWeight.bold)),
+            //           Text('🕒 Turno',
+            //               style: TextStyle(
+            //                   fontSize: 14, fontWeight: FontWeight.bold)),
+            //           Text('📑 Modalidade',
+            //               style: TextStyle(
+            //                   fontSize: 14, fontWeight: FontWeight.bold)),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Form(
