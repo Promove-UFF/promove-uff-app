@@ -135,40 +135,40 @@ class _InterfacePageState extends State<InterfacePage> {
       ),
       body: Column(
         children: [
-          Container(
-            color: Color.fromARGB(255, 225, 230, 232),
-            child: Container(
-              margin: EdgeInsets.all(16.0),
-              padding: EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 217, 217, 217),
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    onTap: () => _showNotImplemented(context),
-                    child: Text('📍 Localização',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                  ),
-                  GestureDetector(
-                    onTap: () => _showNotImplemented(context),
-                    child: Text('🕒 Turno',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                  ),
-                  GestureDetector(
-                    onTap: () => _showNotImplemented(context),
-                    child: Text('📑 Modalidade',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // Container(
+          //   color: Color.fromARGB(255, 225, 230, 232),
+          //   child: Container(
+          //     margin: EdgeInsets.all(16.0),
+          //     padding: EdgeInsets.all(8.0),
+          //     decoration: BoxDecoration(
+          //       color: Color.fromARGB(255, 217, 217, 217),
+          //       borderRadius: BorderRadius.circular(25),
+          //     ),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //       children: [
+          //         GestureDetector(
+          //           onTap: () => _showNotImplemented(context),
+          //           child: Text('📍 Localização',
+          //               style: TextStyle(
+          //                   fontSize: 16, fontWeight: FontWeight.bold)),
+          //         ),
+          //         GestureDetector(
+          //           onTap: () => _showNotImplemented(context),
+          //           child: Text('🕒 Turno',
+          //               style: TextStyle(
+          //                   fontSize: 16, fontWeight: FontWeight.bold)),
+          //         ),
+          //         GestureDetector(
+          //           onTap: () => _showNotImplemented(context),
+          //           child: Text('📑 Modalidade',
+          //               style: TextStyle(
+          //                   fontSize: 16, fontWeight: FontWeight.bold)),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           Expanded(
             child: FlutterMap(
               options: MapOptions(
