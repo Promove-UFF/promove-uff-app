@@ -27,9 +27,9 @@ class GoogleSignInHandler {
             builder: (context) => MyScreen()
           ),
         );
-        debugPrint('Deslogado');
+        print('Deslogado');
       } catch (e) {
-        debugPrint("ERRO deslogando:\n$e");
+        print("ERRO deslogando:\n$e");
       }
     } else {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
@@ -44,6 +44,7 @@ class GoogleSignInHandler {
 
       if (googleUser != null) {
         Usuario usuario = await _saveOrGetUser(googleUser);
+        print("Logado");
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -69,7 +70,7 @@ class GoogleSignInHandler {
         isProfessor: false, 
       );
       await userDoc.set(newUser.toFirestore());
-      debugPrint('Usuário salvo no Firestore');
+      print('Usuário salvo no Firestore');
       return newUser;
     } else {
       // Se o usuário já existir, retorna um objeto Usuario

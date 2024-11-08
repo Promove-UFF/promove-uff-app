@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAfAo3-v_4LNjCdXIj6cz1ReF1vvyXlll4',
-    appId: '1:176579953271:android:f1a3b52b308f4c54ddfc72',
+    appId: '1:176579953271:android:cde1ccc7ee9e4883ddfc72',
     messagingSenderId: '176579953271',
     projectId: 'promove-uff',
     storageBucket: 'promove-uff.appspot.com',
@@ -59,12 +59,13 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDj8D2GfYVk1oK61y_WLR-MBfz6RBj5CPs',
-    appId: '1:176579953271:ios:00315fc13fcb8b70ddfc72',
+    appId: '1:176579953271:ios:fb95153807d296b2ddfc72',
     messagingSenderId: '176579953271',
     projectId: 'promove-uff',
     storageBucket: 'promove-uff.appspot.com',
-    iosClientId: '176579953271-fono8m08m9pav5p6urt5ag135miq84jk.apps.googleusercontent.com',
-    iosBundleId: 'com.example.app',
+    androidClientId: '176579953271-39v1e1acge4efop3h0nvkfavvc8hj6ab.apps.googleusercontent.com',
+    iosClientId: '176579953271-79glknrnv5ig2pren1r6sa1bmfrl0jbr.apps.googleusercontent.com',
+    iosBundleId: 'br.uff.promove',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
